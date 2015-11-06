@@ -3,3 +3,7 @@
 
 # figwheel
 /figwheel_server.log
+
+# build
+/resources/public/js/app.js
+/resources/public/js/out
