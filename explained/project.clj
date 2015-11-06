@@ -19,10 +19,26 @@
             :plugins [[lein-environ "1.0.1"]
                       [lein-asset-minifier "0.2.2"]]
 
-            :ring {:handler explained.handler/app
-                   :uberwar-name "explained.war"}
+            :source-paths ["src/clj" 
+                           "src/cljc"]
+
+            :cljsbuild {:builds {
+                                 :app {:source-paths ["src/cljs" 
+                                                      "src/cljc"]
+                                       :compiler {:output-to "resources/public/js/app.js"
+                                                  :output-dir "resources/public/js/out"
+                                                  :asset-path "js/out"
+                                                  :optimizations :none
+                                                  :pretty-print true}}}}
+
+            :minify-assets {:assets
+                            {"resources/public/css/site.min.css" 
+                             "resources/public/css/site.css"}}
 
             :min-lein-version "2.5.0"
+
+            :ring {:handler explained.handler/app
+                   :uberwar-name "explained.war"}
 
             :uberjar-name "explained.jar"
 
@@ -32,20 +48,9 @@
                                               [:cljsbuild :builds :app :compiler :output-dir]
                                               [:cljsbuild :builds :app :compiler :output-to]]
 
-            :source-paths ["src/clj" "src/cljc"]
-
-            :minify-assets
-            {:assets
-             {"resources/public/css/site.min.css" "resources/public/css/site.css"}}
-
-            :cljsbuild {:builds {:app {:source-paths ["src/cljs" "src/cljc"]
-                                       :compiler {:output-to "resources/public/js/app.js"
-                                                  :output-dir "resources/public/js/out"
-                                                  :asset-path "js/out"
-                                                  :optimizations :none
-                                                  :pretty-print true}}}}
-
-            :profiles {:dev {:repl-options {:init-ns explained.repl}
+            :profiles {
+                       :dev {
+                             :env {:dev true}
 
                              :dependencies [[ring/ring-mock "0.3.0"]
                                             [ring/ring-devel "1.4.0"]
@@ -54,45 +59,51 @@
                                             [com.cemerick/piggieback "0.1.5"]
                                             [pjstadig/humane-test-output "0.7.0"]]
 
-                             :source-paths ["env/dev/clj"]
                              :plugins [[lein-figwheel "0.4.1"]
                                        [lein-cljsbuild "1.1.0"]]
 
-                             :injections [(require 'pjstadig.humane-test-output)
-                                          (pjstadig.humane-test-output/activate!)]
+                             :source-paths ["env/dev/clj"]
 
                              :figwheel {:http-server-root "public"
                                         :server-port 3449
                                         :nrepl-port 7002
-                                        :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"
-                                                           ]
+                                        :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"]
                                         :css-dirs ["resources/public/css"]
-                                        :ring-handler explained.handler/app}
+                                        :ring-handler explained.handler/app}}
 
-                             :env {:dev true}
-
-                             :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]
+                             :cljsbuild {:builds {
+                                                  :app {
+                                                        :source-paths ["env/dev/cljs"]
                                                         :compiler {:main "explained.dev"
                                                                    :source-map true}}
 
-                                                  :devcards {:source-paths ["src/cljs" "src/cljc" "env/dev/cljs"]
-                                                             :figwheel {:devcards true}
+                                                  :devcards {:source-paths ["src/cljs" 
+                                                                            "src/cljc" 
+                                                                            "env/dev/cljs"]
                                                              :compiler {:main "explained.cards"
                                                                         :asset-path "js/devcards_out"
                                                                         :output-to "resources/public/js/app_devcards.js"
                                                                         :output-dir "resources/public/js/devcards_out"
-                                                                        :source-map-timestamp true}}
-                                                  }
+                                                                        :source-map-timestamp true}
+                                                             :figwheel {:devcards true}}}}
 
-                                         }}
+                             :injections [(require 'pjstadig.humane-test-output)
+                                          (pjstadig.humane-test-output/activate!)]
 
-                       :uberjar {:hooks [leiningen.cljsbuild minify-assets.plugin/hooks]
+                             :repl-options {:init-ns explained.repl}
+
+
+                       :uberjar {
                                  :env {:production true}
-                                 :aot :all
-                                 :omit-source true
+
                                  :cljsbuild {:jar true
-                                             :builds {:app
-                                                      {:source-paths ["env/prod/cljs"]
-                                                       :compiler
-                                                       {:optimizations :advanced
-                                                        :pretty-print false}}}}}})
+                                             :builds {:app {:source-paths ["env/prod/cljs"]
+                                                            :compiler {:optimizations :advanced
+                                                                       :pretty-print false}}}}
+
+                                 :hooks [leiningen.cljsbuild 
+                                         minify-assets.plugin/hooks]
+
+                                 :aot :all
+
+                                 :omit-source true}})
