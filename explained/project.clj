@@ -1,4 +1,6 @@
 (defproject explained "0.1.0-SNAPSHOT"
+            :min-lein-version "2.5.0"
+
             :dependencies [[org.clojure/clojure "1.7.0"]
                            [ring-server "0.4.0"]
                            [reagent "0.5.1"]
@@ -13,8 +15,7 @@
                            [org.clojure/clojurescript "1.7.145" :scope "provided"]
                            [secretary "1.2.3"]
                            [venantius/accountant "0.1.4"]
-                           [devcards "0.2.0-8"] 
-                           ]
+                           [devcards "0.2.0-8"]]
 
             :plugins [[lein-environ "1.0.1"]
                       [lein-asset-minifier "0.2.2"]]
@@ -35,8 +36,6 @@
                             {"resources/public/css/site.min.css" 
                              "resources/public/css/site.css"}}
 
-            :min-lein-version "2.5.0"
-
             :ring {:handler explained.handler/app
                    :uberwar-name "explained.war"}
 
@@ -47,7 +46,6 @@
             :clean-targets ^{:protect false} [:target-path
                                               [:cljsbuild :builds :app :compiler :output-dir]
                                               [:cljsbuild :builds :app :compiler :output-to]]
-
             :profiles {
                        :dev {
                              :env {:dev true}
@@ -74,18 +72,19 @@
                              :cljsbuild {:builds {
                                                   :app {
                                                         :source-paths ["env/dev/cljs"]
+
                                                         :compiler {:main "explained.dev"
                                                                    :source-map true}}
 
-                                                  :devcards {:source-paths ["src/cljs" 
-                                                                            "src/cljc" 
-                                                                            "env/dev/cljs"]
-                                                             :compiler {:main "explained.cards"
-                                                                        :asset-path "js/devcards_out"
-                                                                        :output-to "resources/public/js/app_devcards.js"
-                                                                        :output-dir "resources/public/js/devcards_out"
-                                                                        :source-map-timestamp true}
-                                                             :figwheel {:devcards true}}}}
+                                                  :crd {:source-paths ["src/cljs" 
+                                                                       "src/cljc" 
+                                                                       "env/dev/cljs"]
+                                                        :compiler {:main "explained.cards"
+                                                                   :asset-path "js/devcards_out"
+                                                                   :output-to "resources/public/js/app_devcards.js"
+                                                                   :output-dir "resources/public/js/devcards_out"
+                                                                   :source-map-timestamp true}
+                                                        :figwheel {:devcards true}}}}
 
                              :injections [(require 'pjstadig.humane-test-output)
                                           (pjstadig.humane-test-output/activate!)]
@@ -96,10 +95,10 @@
                        :uberjar {
                                  :env {:production true}
 
-                                 :cljsbuild {:jar true
-                                             :builds {:app {:source-paths ["env/prod/cljs"]
+                                 :cljsbuild {:builds {:app {:source-paths ["env/prod/cljs"]
                                                             :compiler {:optimizations :advanced
-                                                                       :pretty-print false}}}}
+                                                                       :pretty-print false}}}
+                                             :jar true}
 
                                  :hooks [leiningen.cljsbuild 
                                          minify-assets.plugin/hooks]
