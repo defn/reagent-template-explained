@@ -6,4 +6,8 @@
 
 # build
 /resources/public/js/app.js
+/resources/public/js/app_devcards.js
 /resources/public/js/out
+
+/resources/public/css/site.css
+/resources/public/css/site.min.css
