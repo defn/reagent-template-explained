@@ -18,7 +18,7 @@
                  [org.clojure/clojurescript "1.7.145" :scope "provided"]
                  [secretary "1.2.3"]
                  [venantius/accountant "0.1.4"]
-                 
+                  [devcards "0.2.0-8"] 
                  ]
 
   :plugins [[lein-environ "1.0.1"]
@@ -80,7 +80,13 @@
                                               :compiler {:main "explained.dev"
                                                          :source-map true}}
 
-
+                                        :devcards {:source-paths ["src/cljs" "src/cljc" "env/dev/cljs"]
+                                                   :figwheel {:devcards true}
+                                                   :compiler {:main "explained.cards"
+                                                              :asset-path "js/devcards_out"
+                                                              :output-to "resources/public/js/app_devcards.js"
+                                                              :output-dir "resources/public/js/devcards_out"
+                                                              :source-map-timestamp true}}
                                         }
 
                                }}
