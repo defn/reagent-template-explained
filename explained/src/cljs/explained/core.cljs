@@ -1,8 +1,8 @@
 (ns explained.core
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [reagent.session :as session]
+            [secretary.core :as secretary :include-macros true]
+            [accountant.core :as accountant]))
 
 ;; -------------------------
 ;; Views
@@ -22,10 +22,10 @@
 ;; Routes
 
 (secretary/defroute "/" []
-  (session/put! :current-page #'home-page))
+                    (session/put! :current-page #'home-page))
 
 (secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
+                    (session/put! :current-page #'about-page))
 
 ;; -------------------------
 ;; Initialize app

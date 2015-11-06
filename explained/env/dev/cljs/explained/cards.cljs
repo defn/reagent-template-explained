@@ -3,17 +3,17 @@
             [reagent.session :as session]
             [explained.core :as core])
   (:require-macros
-   [devcards.core
-    :as dc
-    :refer [defcard defcard-doc defcard-rg deftest]]))
+    [devcards.core
+     :as dc
+     :refer [defcard defcard-doc defcard-rg deftest]]))
 
 (enable-console-print!)
 
 (defcard-rg first-card
-  [:div>h1 "This is your first devcard!"])
+            [:div>h1 "This is your first devcard!"])
 
 (defcard-rg home-page-card
-  [core/home-page])
+            [core/home-page])
 
 (reagent/render [:div] (.getElementById js/document "app"))
 
